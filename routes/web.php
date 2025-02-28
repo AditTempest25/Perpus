@@ -14,6 +14,27 @@ Route::get('/', function () {
     ]);
 });
 
+// Dashboard Admin
+Route::middleware('role:admin')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return Inertia::render('admin/dashboard');
+    })->name('admin.dashboard');
+});
+
+// Dashboard Petugas
+Route::middleware('role:petugas')->group(function () {
+    Route::get('/petugas/dashboard', function () {
+        return Inertia::render('petugas/dashboard');
+    })->name('petugas.dashboard');
+});
+
+// Dashboard User Biasa
+Route::middleware('role:user')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Profile/Dashboard');
+    })->name('dashboard');
+});
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
