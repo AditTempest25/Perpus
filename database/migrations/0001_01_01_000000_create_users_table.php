@@ -17,7 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->enum('role', ['admin', 'petugas', 'user'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('alamat')->nullable();
+            $table->integer('no_hp')->nullable();
             $table->string('password');
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

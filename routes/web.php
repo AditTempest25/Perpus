@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +16,22 @@ Route::get('/', function () {
     ]);
 });
 
+// OAuth Routes (disarankan menggunakan middleware web)
+Route::get('/auth/{provider}', [OAuthController::class, 'redirectToProvider'])
+    ->name('oauth.redirect');
+Route::get('/auth/{provider}/callback', [OAuthController::class, 'handleProviderCallback'])
+    ->name('oauth.callback');
+
+Route::prefix('api')->group(function () {
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+    // Protected Routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'user']);
+    });
+});
 // Dashboard Admin
 Route::middleware('role:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -28,13 +46,6 @@ Route::middleware('role:petugas')->group(function () {
     })->name('petugas.dashboard');
 });
 
-// Dashboard User Biasa
-Route::middleware('role:user')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Profile/Dashboard');
-    })->name('dashboard');
-});
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -45,4 +56,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
