@@ -65,7 +65,7 @@ class OAuthController extends Controller
                     $user = User::create([
                         'name'        => $socialUser->getName(),
                         'email'       => $socialUser->getEmail(),
-                        'password'    => Hash::make(rand(100000, 999999)), // Random password
+                        'password' => Hash::make('123456789'),
                         'provider'    => $provider,
                         'provider_id' => $socialUser->getId(),
                         'avatar'      => $socialUser->getAvatar(),
